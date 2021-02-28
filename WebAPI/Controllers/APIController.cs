@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
             if (encodedDirectories != null)
             {
                 var decode = Encoding.UTF8.GetString(encodedDirectories);
-                return Content(decode, "application/json");
+                return Content(decode, "application/json", Encoding.UTF8);
             }
             else
             {
@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
                         .SetAbsoluteExpiration(DateTime.Now.AddHours(6));
                     await _distributedCache.SetAsync(cacheKey, encodedDirectories, options);
                 }
-                return Content(jsonString, "application/json");
+                return Content(jsonString, "application/json", Encoding.UTF8);
             }
         }
 
@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
             string jsonString = JsonConvert.SerializeObject(directory, Formatting.Indented);
             if (directory == null)
                 return BadRequest("No matching records were found.");
-            return Content(jsonString, "application/json");
+            return Content(jsonString, "application/json", Encoding.UTF8);
         }
 
         [Route("CreateDirectory")]
@@ -73,7 +73,7 @@ namespace WebAPI.Controllers
         {
             var directory = await _directoryService.AddDirectoryAsync(entity);
             string jsonString = JsonConvert.SerializeObject(directory, Formatting.Indented);
-            return Content(jsonString, "application/json");
+            return Content(jsonString, "application/json", Encoding.UTF8);
         }
 
         [Route("InactiveDirectory")]
@@ -87,7 +87,7 @@ namespace WebAPI.Controllers
             directory.IsActive = false;
             await _directoryService.UpdateDirectoryAsync(directory);
             string jsonString = JsonConvert.SerializeObject(directory, Formatting.Indented);
-            return Content(jsonString, "application/json");
+            return Content(jsonString, "application/json", Encoding.UTF8);
         }
 
         [Route("UpdateDirectory")]
@@ -98,7 +98,7 @@ namespace WebAPI.Controllers
             if (directory == null)
                 return BadRequest("An error occured.");
             string jsonString = JsonConvert.SerializeObject(directory, Formatting.Indented);
-            return Content(jsonString, "application/json");
+            return Content(jsonString, "application/json", Encoding.UTF8);
         }
 
         [Route("DeleteDirectory")]
@@ -107,7 +107,7 @@ namespace WebAPI.Controllers
         {
             bool result = await _directoryService.DeleteDirectoryAsync(entity.Uuid);
             if (result)
-                return Content(JsonConvert.SerializeObject(new { message = "Deletion is successful." }), "application/json");
+                return Content(JsonConvert.SerializeObject(new { message = "Deletion is successful." }), "application/json", Encoding.UTF8);
             else
                 return BadRequest(JsonConvert.SerializeObject(new { error = true, message = "Deletion is failed." }));
         }
@@ -116,14 +116,14 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddContact(Contact entity)
         {
-            return Content(JsonConvert.SerializeObject(await _contactService.AddContactAsync(entity), Formatting.Indented), "application/json");
+            return Content(JsonConvert.SerializeObject(await _contactService.AddContactAsync(entity), Formatting.Indented), "application/json", Encoding.UTF8);
         }
 
         [Route("InactiveContact")]
         [HttpPatch]
         public async Task<IActionResult> InactiveContact(Contact entity)
         {
-            return Content(JsonConvert.SerializeObject(await _contactService.InactiveContactAsync(entity), Formatting.Indented), "application/json");
+            return Content(JsonConvert.SerializeObject(await _contactService.InactiveContactAsync(entity), Formatting.Indented), "application/json", Encoding.UTF8);
         }
 
         [Route("Reporter")]
@@ -135,7 +135,7 @@ namespace WebAPI.Controllers
             if (encodedReports != null)
             {
                 var decode = Encoding.UTF8.GetString(encodedReports);
-                return Content(decode, "application/json");
+                return Content(decode, "application/json", Encoding.UTF8);
             }
             var reports = await _reportService.ReporterAsync();
             string json = JsonConvert.SerializeObject(reports, Formatting.Indented);
@@ -147,7 +147,7 @@ namespace WebAPI.Controllers
                     .SetAbsoluteExpiration(DateTime.Now.AddHours(6));
                 await _distributedCache.SetAsync(cacheKey, encodedReports, options);
             }
-            return Content(json, "application/json");
+            return Content(json, "application/json", Encoding.UTF8);
         }
     }
 }

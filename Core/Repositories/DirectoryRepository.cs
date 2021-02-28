@@ -30,12 +30,21 @@ namespace Core.Repositories
 
         public async Task<bool> DeleteDirectoryAsync(Guid uuid)
         {
-            if (uuid == null)
-                throw new ArgumentNullException(nameof(uuid));
+            try
+            {
+                if (uuid == null)
+                    throw new ArgumentNullException(nameof(uuid));
 
-            var directory = await _context.Directories.FindAsync(uuid);
-            _context.Remove(directory);
-            return await _context.SaveChangesAsync() == 1;
+                var directory = await _context.Directories.Include(x=>x.Contacts).Where(x=>x.Uuid == uuid).FirstOrDefaultAsync();
+                _context.Contacts.RemoveRange(directory.Contacts);
+                _context.Directories.Remove(directory);
+                return await _context.SaveChangesAsync() == 1;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Directory>> GetDirectoriesAsync()
