@@ -130,7 +130,24 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Reporter()
         {
-            return Content(JsonConvert.SerializeObject(await _reportService.ReporterAsync(), Formatting.Indented), "application/json");
+            string cacheKey = CacheHelper.RedisCacheKey;
+            var encodedReports = await _distributedCache.GetAsync(cacheKey);
+            if (encodedReports != null)
+            {
+                var decode = Encoding.UTF8.GetString(encodedReports);
+                return Content(decode, "application/json");
+            }
+            var reports = await _reportService.ReporterAsync();
+            string json = JsonConvert.SerializeObject(reports, Formatting.Indented);
+            if (reports != null)
+            {
+                encodedReports = Encoding.UTF8.GetBytes(json);
+                var options = new DistributedCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(1))
+                    .SetAbsoluteExpiration(DateTime.Now.AddHours(6));
+                await _distributedCache.SetAsync(cacheKey, encodedReports, options);
+            }
+            return Content(json, "application/json");
         }
     }
 }
