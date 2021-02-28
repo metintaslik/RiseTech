@@ -1,6 +1,7 @@
 ﻿using Core.Services;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,10 +30,13 @@ namespace Core.Repositories
                 .Select(x => new ReportCounter { Location = x.Key, Counter = x.Count() })
                 .OrderByDescending(x => x.Counter).ToListAsync();
 
-            report.DirectoryCountByLocation = await _context.Contacts
-                .GroupBy(x => x.Location)
-                .Select(x => new ReportCounter { Location = x.Key, Counter = x.Distinct().Count() }).ToListAsync();
-
+            report.DirectoryCountByLocation = await (from x in _context.Contacts
+                                                     group x by x.Location into loc
+                                                     select new ReportCounter
+                                                     {
+                                                         Location = loc.Key,
+                                                         Counter = loc.Select(l => l.PersonId).Distinct().Count()
+                                                     }).OrderByDescending(x=>x.Counter).ToListAsync();
             return report;
         }
     }
