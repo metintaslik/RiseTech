@@ -1,15 +1,13 @@
+using Core.Repositories;
+using Core.Services;
+using Data.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using WebAPI.Helpers;
 
 namespace WebAPI
 {
@@ -26,6 +24,18 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<RiseTechDBContext>(o =>
+            {
+                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            services.AddScoped<IDirectoryService, DirectoryRepository>();
+            services.AddScoped<IContactService, ContactRepository>();
+            services.AddScoped<IReportService, ReportRepository>();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "localhost:6379";
+            });
+            services.AddSingleton<CacheHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

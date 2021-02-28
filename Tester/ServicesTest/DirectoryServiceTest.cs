@@ -28,34 +28,34 @@ namespace Tester.ServicesTest
         [Theory, AutoData]
         public void GetAllDirectories_Should_Success([Frozen] Mock<IDirectoryService> repository, DirectoryRepository directoryService, List<Directory> directories)
         {
-            repository.Setup(x => x.GetDirectories()).Returns(directories.AsQueryable);
-            Action action = () =>
+            repository.Setup(x => x.GetDirectoriesAsync().Result).Returns(directories);
+            Action action = async () =>
             {
-                var result = directoryService.GetDirectories();
+                var result = await directoryService.GetDirectoriesAsync();
                 result.Count().Should().Be(directories.Count);
             };
             action.Should().NotThrow<Exception>();
         }
 
         [Theory, AutoData]
-        public void GetDirectory_Should_Success([Frozen] Mock<IDirectoryService> repository, DirectoryRepository directoryService, Directory directory)
+        public void GetDirectory_Should_Success([Frozen] Mock<IDirectoryService> repository, DirectoryRepository directoryService, Guid uuid)
         {
-            repository.Setup(x=>x.GetDirectoryAsync(directory)).Returns(It.IsAny<Task<Directory>>());
+            repository.Setup(x => x.GetDirectoryAsync(uuid)).Returns(It.IsAny<Task<Directory>>());
             Action action = async () =>
             {
-                var result = await directoryService.GetDirectoryAsync(directory);
-                result.Should().BeEquivalentTo(directory);
+                var result = await directoryService.GetDirectoryAsync(uuid);
+                result.Should().BeEquivalentTo(result);
             };
             action.Should().NotThrow<Exception>();
         }
 
         [Theory, AutoData]
-        public void DeleteDirectory_Should_Success([Frozen] Mock<IDirectoryService> repository, DirectoryRepository directoryService, Directory directory)
+        public void DeleteDirectory_Should_Success([Frozen] Mock<IDirectoryService> repository, DirectoryRepository directoryService, Guid uuid)
         {
-            repository.Setup(x => x.DeleteDirectoryAsync(directory)).Returns(It.IsAny<Task<bool>>());
+            repository.Setup(x => x.DeleteDirectoryAsync(uuid)).Returns(It.IsAny<Task<bool>>());
             Action action = async () =>
             {
-                var result = await directoryService.DeleteDirectoryAsync(directory);
+                var result = await directoryService.DeleteDirectoryAsync(uuid);
             };
             action.Should().NotThrow<Exception>();
         }

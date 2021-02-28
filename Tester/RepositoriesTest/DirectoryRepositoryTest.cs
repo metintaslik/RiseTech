@@ -73,7 +73,7 @@ namespace Tester.RepositoriesTest
                     IsActive = true
                 });
             context.SaveChanges();
-            Assert.True(await directoryRepository.DeleteDirectoryAsync(directory.Entity));
+            Assert.True(await directoryRepository.DeleteDirectoryAsync(directory.Entity.Uuid));
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Tester.RepositoriesTest
                 });
             context.SaveChanges();
 
-            Assert.Empty(directoryRepository.GetDirectories());
+            Assert.Empty(await directoryRepository.GetDirectoriesAsync());
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace Tester.RepositoriesTest
                     IsActive = true
                 });
             context.SaveChanges();
-            Assert.NotNull(await directoryRepository.GetDirectoryAsync(directory.Entity));
+            Assert.NotNull(await directoryRepository.GetDirectoryAsync(directory.Entity.Uuid));
         }
 
         [Fact]

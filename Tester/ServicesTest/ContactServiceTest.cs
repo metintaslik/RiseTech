@@ -5,8 +5,6 @@ using Data.Models;
 using FluentAssertions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -26,35 +24,12 @@ namespace Tester.ServicesTest
         }
 
         [Theory, AutoData]
-        public void DeleteContact_Should_Success([Frozen] Mock<IContactService> repository, ContactRepository contactService, Contact contact)
-        {
-            repository.Setup(x => x.DeleteContactAsync(contact)).Returns(It.IsAny<Task<bool>>());
-            Action action = async () =>
-            {
-                await contactService.DeleteContactAsync(contact);
-            };
-            action.Should().NotThrow<Exception>();
-        }
-
-        [Theory, AutoData]
-        public void GetContacts_Should_Success([Frozen] Mock<IContactService> repository, ContactRepository contactService, List<Contact> contacts)
-        {
-            repository.Setup(x => x.GetContacts()).Returns(It.IsAny<IEnumerable<Contact>>());
-            Action action = () =>
-            {
-                var result = contactService.GetContacts();
-                result.Count().Should().Be(contacts.Count);
-            };
-            action.Should().NotThrow<Exception>();
-        }
-
-        [Theory, AutoData]
         public void UpdateContact_Should_Success([Frozen] Mock<IContactService> repository, ContactRepository contactService, Contact contact)
         {
-            repository.Setup(x => x.UpdateContactAsync(contact)).Returns(It.IsAny<Task<Contact>>());
+            repository.Setup(x => x.InactiveContactAsync(contact)).Returns(It.IsAny<Task<Contact>>());
             Action action = async () =>
             {
-                await contactService.UpdateContactAsync(contact);
+                await contactService.InactiveContactAsync(contact);
             };
             action.Should().NotThrow<Exception>();
         }

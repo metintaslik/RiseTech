@@ -22,31 +22,35 @@ namespace Core.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
+            entity.Uuid = Guid.NewGuid();
             entity.IsActive = true;
             await _context.Directories.AddAsync(entity);
             return (await _context.SaveChangesAsync() == 1) ? entity : null;
         }
 
-        public async Task<bool> DeleteDirectoryAsync(Directory entity)
+        public async Task<bool> DeleteDirectoryAsync(Guid uuid)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            if (uuid == null)
+                throw new ArgumentNullException(nameof(uuid));
 
-            _context.Remove(entity);
+            var directory = await _context.Directories.FindAsync(uuid);
+            _context.Remove(directory);
             return await _context.SaveChangesAsync() == 1;
         }
 
-        public IEnumerable<Directory> GetDirectories()
+        public async Task<IEnumerable<Directory>> GetDirectoriesAsync()
         {
-            return _context.Directories.Where(x => x.IsActive == true).ToList();
+            return await _context.Directories.Where(x => x.IsActive == true).ToListAsync();
         }
 
-        public async Task<Directory> GetDirectoryAsync(Directory entity)
+        public async Task<Directory> GetDirectoryAsync(Guid uuid)
         {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+            if (uuid == null)
+                throw new ArgumentNullException(nameof(uuid));
 
-            return await _context.Directories.Include(x => x.Contacts).FirstOrDefaultAsync();
+            var directory = await _context.Directories.FindAsync(uuid);
+            directory.Contacts = await _context.Contacts.Where(x => x.PersonId == uuid && x.IsActive == true).ToListAsync();
+            return directory;
         }
 
         public async Task<Directory> UpdateDirectoryAsync(Directory entity)
@@ -54,7 +58,7 @@ namespace Core.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _context.Update(entity);
+            _context.Directories.Update(entity);
             return (await _context.SaveChangesAsync() == 1) ? entity : null;
         }
     }

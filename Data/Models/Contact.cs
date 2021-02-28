@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 #nullable disable
 
@@ -14,6 +15,8 @@ namespace Data.Models
         public string Location { get; set; }
         public bool IsActive { get; set; }
 
+        [JsonIgnore]
+        [IgnoreDataMember]
         public virtual Directory Person { get; set; }
     }
 }
