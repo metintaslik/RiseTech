@@ -38,24 +38,102 @@ class _ReportPageState extends State<ReportPage> {
               Card(
                 child: Column(
                   children: [
-                    Center(
-                        child: Text(
-                      "High To Low Count By Location",
-                      style: TextStyle(fontSize: 25),
-                    )),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 1,
-                      height: 1,
+                    ExpansionTile(
+                      title: Text(
+                        "High To Low Count By Location",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: reports.highToLowCountByLocation.length,
+                          itemBuilder: (builder, index) {
+                            var item = reports.highToLowCountByLocation[index];
+                            return Container(
+                              margin: const EdgeInsets.all(1.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.blueAccent, width: 2),
+                              ),
+                              child: ListTile(
+                                title:
+                                    Text("${item.location} - ${item.counter}"),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                    ListView.builder(
-                      itemCount: reports.highToLowCountByLocation.length,
-                      itemBuilder: (builder, index) {
-                        var item = reports.highToLowCountByLocation[index];
-                        return ListTile(
-                          title: Text("${item.location} - ${item.counter}"),
-                        );
-                      },
+                    Container(
+                      margin: const EdgeInsets.all(3.0),
+                      child: Divider(
+                        color: Colors.blueGrey,
+                        thickness: 3,
+                        height: 1,
+                      ),
+                    ),
+                    ExpansionTile(
+                      title: Text(
+                        "Directory Count By Location",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: reports.directoryCountByLocation.length,
+                          itemBuilder: (builder, index) {
+                            var item = reports.directoryCountByLocation[index];
+                            return Container(
+                              margin: const EdgeInsets.all(1.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.blueAccent, width: 2),
+                              ),
+                              child: ListTile(
+                                title:
+                                    Text("${item.location} - ${item.counter}"),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(3.0),
+                      child: Divider(
+                        color: Colors.blueGrey,
+                        thickness: 3,
+                        height: 1,
+                      ),
+                    ),
+                    ExpansionTile(
+                      title: Text(
+                        "Telephone Number Count By Location",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: reports.telephoneCountByLocation.length,
+                          itemBuilder: (builder, index) {
+                            var item = reports.telephoneCountByLocation[index];
+                            return Container(
+                              margin: const EdgeInsets.all(1.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.blueAccent, width: 2),
+                              ),
+                              child: ListTile(
+                                title:
+                                    Text("${item.location} - ${item.counter}"),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
