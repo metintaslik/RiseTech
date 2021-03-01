@@ -1,6 +1,6 @@
 # RiseTech
 
-# ASP.NET Core İçin Adımlar
+# ASP.NET Core Web API İçin Adımlar
 
 İlk olarak proje git üzerinden clone alınır
 --
