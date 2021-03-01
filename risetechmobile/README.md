@@ -1,4 +1,4 @@
-#Flutter Mobile
+# Flutter Mobile
 
 Proje clone'u alınıp workspace VS Code yada Android Studio da ilk açıldığı anda terminalden 'flutter pub get' kullanılıp 
 pubspec'deki library'ler ve proje konumundaki dosyaların analizi edilmesi gerekmektedir.
